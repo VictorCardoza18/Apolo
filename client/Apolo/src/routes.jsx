@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 import DashboardPage from './pages/dashboard/DashboardPage'
+import CustomersPage from './pages/customers/CustomersPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 
 // Definición de rutas usando React Router v7
@@ -29,6 +30,10 @@ const routes = [
             {
                 path: 'dashboard',
                 element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
+            },
+            {
+                path: 'customers',
+                element: <ProtectedRoute><CustomersPage /></ProtectedRoute>,
             },
             {
                 path: '*',

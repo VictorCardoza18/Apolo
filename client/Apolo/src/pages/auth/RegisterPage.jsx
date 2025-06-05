@@ -42,107 +42,93 @@ const RegisterPage = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8">
-                <div className="text-center">
-                    <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                        Crear una cuenta
-                    </h2>
-                    <p className="mt-2 text-sm text-gray-600">
-                        O{' '}
-                        <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
-                            inicia sesión si ya tienes una cuenta
+        <div className='flex items-center justify-center min-h-screen bg-zinc-900 py-12 px-4 sm:px-6 lg:px-8'>
+            <div className='bg-zinc-800 max-w-md w-full p-10 rounded-md shadow-xl'>
+                <div className='text-center mb-8'>
+                    <h1 className='text-3xl font-bold text-white mb-4'>Crear cuenta</h1>
+                    <p className='text-zinc-400 text-sm'>
+                        ¿Ya tienes una cuenta?{' '}
+                        <Link to="/login" className='text-sky-500 hover:text-sky-400 font-medium'>
+                            Inicia sesión aquí
                         </Link>
                     </p>
                 </div>
 
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                    <div className="space-y-4">
-                        <div>
-                            <label htmlFor="username" className="form-label">
-                                Nombre de usuario
-                            </label>
-                            <input
-                                id="username"
-                                type="text"
-                                autoComplete="username"
-                                className="input-field"
-                                {...register('username', {
-                                    required: 'El nombre de usuario es obligatorio',
-                                    minLength: {
-                                        value: 3,
-                                        message: 'El nombre de usuario debe tener al menos 3 caracteres'
-                                    }
-                                })}
-                            />
-                            {errors.username && <p className="error-message">{errors.username.message}</p>}
-                        </div>
-
-                        <div>
-                            <label htmlFor="email" className="form-label">
-                                Correo electrónico
-                            </label>
-                            <input
-                                id="email"
-                                type="email"
-                                autoComplete="email"
-                                className="input-field"
-                                {...register('email', {
-                                    required: 'El correo electrónico es obligatorio',
-                                    pattern: {
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message: 'Correo electrónico inválido'
-                                    }
-                                })}
-                            />
-                            {errors.email && <p className="error-message">{errors.email.message}</p>}
-                        </div>
-
-                        <div>
-                            <label htmlFor="password" className="form-label">
-                                Contraseña
-                            </label>
-                            <input
-                                id="password"
-                                type="password"
-                                autoComplete="new-password"
-                                className="input-field"
-                                {...register('password', {
-                                    required: 'La contraseña es obligatoria',
-                                    minLength: {
-                                        value: 6,
-                                        message: 'La contraseña debe tener al menos 6 caracteres'
-                                    }
-                                })}
-                            />
-                            {errors.password && <p className="error-message">{errors.password.message}</p>}
-                        </div>
-
-                        <div>
-                            <label htmlFor="confirmPassword" className="form-label">
-                                Confirmar contraseña
-                            </label>
-                            <input
-                                id="confirmPassword"
-                                type="password"
-                                className="input-field"
-                                {...register('confirmPassword', {
-                                    required: 'Confirma tu contraseña',
-                                    validate: value => value === watch('password') || 'Las contraseñas no coinciden'
-                                })}
-                            />
-                            {errors.confirmPassword && <p className="error-message">{errors.confirmPassword.message}</p>}
-                        </div>
+                <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+                    <div>
+                        <input
+                            id="username"
+                            type="text"
+                            autoComplete="username"
+                            placeholder='Nombre de usuario'
+                            className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md border border-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none'
+                            {...register('username', {
+                                required: 'El nombre de usuario es obligatorio',
+                                minLength: {
+                                    value: 3,
+                                    message: 'El nombre de usuario debe tener al menos 3 caracteres'
+                                }
+                            })}
+                        />
+                        {errors.username && <p className='text-red-500 text-sm mt-1'>{errors.username.message}</p>}
                     </div>
 
                     <div>
-                        <button
-                            type="submit"
-                            className="btn-primary w-full py-3"
-                        >
-                            Registrarse
-                        </button>
+                        <input
+                            id="email"
+                            type="email"
+                            autoComplete="email"
+                            placeholder='Correo electrónico'
+                            className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md border border-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none'
+                            {...register('email', {
+                                required: 'El correo electrónico es obligatorio',
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: 'Correo electrónico inválido'
+                                }
+                            })}
+                        />
+                        {errors.email && <p className='text-red-500 text-sm mt-1'>{errors.email.message}</p>}
                     </div>
+
+                    <div>
+                        <input
+                            id="password"
+                            type="password"
+                            autoComplete="new-password"
+                            placeholder='Contraseña'
+                            className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md border border-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none'
+                            {...register('password', {
+                                required: 'La contraseña es obligatoria',
+                                minLength: {
+                                    value: 6,
+                                    message: 'La contraseña debe tener al menos 6 caracteres'
+                                }
+                            })}
+                        />
+                        {errors.password && <p className='text-red-500 text-sm mt-1'>{errors.password.message}</p>}
+                    </div>
+
+                    <div>
+                        <input
+                            id="confirmPassword"
+                            type="password"
+                            placeholder='Confirmar contraseña'
+                            className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md border border-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none'
+                            {...register('confirmPassword', {
+                                required: 'Confirma tu contraseña',
+                                validate: value => value === watch('password') || 'Las contraseñas no coinciden'
+                            })}
+                        />
+                        {errors.confirmPassword && <p className='text-red-500 text-sm mt-1'>{errors.confirmPassword.message}</p>}
+                    </div>
+
+                    <button
+                        type="submit"
+                        className='w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-md font-medium transition-colors duration-200 mt-6'
+                    >
+                        Registrarse
+                    </button>
                 </form>
             </div>
         </div>
