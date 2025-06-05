@@ -13,7 +13,7 @@ export const getUsers = async () => {
 // Crear nuevo usuario (solo admin)
 export const createUser = async (userData) => {
     try {
-        const response = await api.post('/users', userData)
+        const response = await api.post('/users/create', userData)
         return response.data
     } catch (error) {
         throw error
