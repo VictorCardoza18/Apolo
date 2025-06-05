@@ -132,12 +132,6 @@ const LoginPage = () => {
                 <div className='bg-zinc-800 max-w-md w-full p-10 rounded-md shadow-xl'>
                     <div className='text-center mb-8'>
                         <h1 className='text-3xl font-bold text-white mb-4'>Iniciar sesión</h1>
-                        <p className='text-zinc-400 text-sm'>
-                            ¿No tienes una cuenta?{' '}
-                            <Link to="/register" className='text-sky-500 hover:text-sky-400 font-medium'>
-                                Regístrate aquí
-                            </Link>
-                        </p>
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>

@@ -29,6 +29,8 @@ export const AuthProvider = ({ children }) => {
             })
 
             const userData = response.data
+            console.log('Usuario autenticado:', userData);
+
 
             // Guardar información del usuario en localStorage
             localStorage.setItem('user', JSON.stringify(userData))

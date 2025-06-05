@@ -66,7 +66,7 @@ const Navbar = () => {
                         {/* Icono de Usuario - Centro */}
                         {isAuthenticated() && (
                             <div className="flex items-center">
-                                <div className="bg-zinc-700 p-2 rounded-full">
+                                <div className={`p-2 rounded-full ${user?.isActive ? 'bg-zinc-700' : 'bg-red-700'}`}>
                                     <svg className="w-6 h-6 text-zinc-300" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                                     </svg>
@@ -111,7 +111,7 @@ const Navbar = () => {
                                     {/* Información del usuario */}
                                     <div className="border-b border-zinc-700 pb-4">
                                         <div className="flex items-center space-x-3">
-                                            <div className="bg-zinc-700 p-3 rounded-full">
+                                            <div className={`p-3 rounded-full ${user?.isActive ? 'bg-zinc-700' : 'bg-red-700'}`}>
                                                 <svg className="w-6 h-6 text-zinc-300" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                                                 </svg>
@@ -119,51 +119,108 @@ const Navbar = () => {
                                             <div>
                                                 <p className="text-white font-medium">Hola, {user?.username}</p>
                                                 <p className="text-zinc-400 text-sm">{user?.email}</p>
+                                                <div className="flex items-center space-x-2 mt-1">
+                                                    <span className={`text-xs px-2 py-1 rounded-full ${user?.role === 'admin'
+                                                            ? 'bg-purple-600/20 text-purple-400'
+                                                            : 'bg-blue-600/20 text-blue-400'
+                                                        }`}>
+                                                        {user?.role === 'admin' ? 'Administrador' : 'Usuario'}
+                                                    </span>
+                                                    <span className={`text-xs px-2 py-1 rounded-full ${user?.isActive
+                                                            ? 'bg-emerald-600/20 text-emerald-400'
+                                                            : 'bg-red-600/20 text-red-400'
+                                                        }`}>
+                                                        {user?.isActive ? 'Activo' : 'Inactivo'}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Enlaces de navegación */}
-                                    <div className="space-y-2">
-                                        <Link
-                                            to="/"
-                                            className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                            onClick={closeMenu}
-                                        >
-                                            <div className="flex items-center space-x-3">
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V7l-7-5z" clipRule="evenodd" />
-                                                </svg>
-                                                <span>Inicio</span>
-                                            </div>
-                                        </Link>
+                                    {/* Enlaces de navegación - Solo si el usuario está activo */}
+                                    {user?.isActive ? (
+                                        <div className="space-y-2">
+                                            <Link
+                                                to="/"
+                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                onClick={closeMenu}
+                                            >
+                                                <div className="flex items-center space-x-3">
+                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V7l-7-5z" clipRule="evenodd" />
+                                                    </svg>
+                                                    <span>Inicio</span>
+                                                </div>
+                                            </Link>
 
-                                        <Link
-                                            to="/dashboard"
-                                            className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                            onClick={closeMenu}
-                                        >
-                                            <div className="flex items-center space-x-3">
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
-                                                </svg>
-                                                <span>Dashboard</span>
-                                            </div>
-                                        </Link>
+                                            <Link
+                                                to="/dashboard"
+                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                onClick={closeMenu}
+                                            >
+                                                <div className="flex items-center space-x-3">
+                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
+                                                    </svg>
+                                                    <span>Dashboard</span>
+                                                </div>
+                                            </Link>
 
-                                        <Link
-                                            to="/customers"
-                                            className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                            onClick={closeMenu}
-                                        >
-                                            <div className="flex items-center space-x-3">
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                            <Link
+                                                to="/customers"
+                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                onClick={closeMenu}
+                                            >
+                                                <div className="flex items-center space-x-3">
+                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                                    </svg>
+                                                    <span>Gestión de Clientes</span>
+                                                </div>
+                                            </Link>
+
+                                            <Link
+                                                to="/products"
+                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                onClick={closeMenu}
+                                            >
+                                                <div className="flex items-center space-x-3">
+                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM9 9a1 1 0 112 0v4a1 1 0 11-2 0V9z" clipRule="evenodd" />
+                                                    </svg>
+                                                    <span>Gestión de Productos</span>
+                                                </div>
+                                            </Link>
+
+                                            {/* Solo mostrar gestión de usuarios a administradores activos */}
+                                            {user?.role === 'admin' && (
+                                                <Link
+                                                    to="/users"
+                                                    className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                    onClick={closeMenu}
+                                                >
+                                                    <div className="flex items-center space-x-3">
+                                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                        <span>Gestión de Usuarios</span>
+                                                    </div>
+                                                </Link>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
+                                            <div className="flex items-center space-x-2">
+                                                <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                                 </svg>
-                                                <span>Gestión de Clientes</span>
+                                                <div>
+                                                    <p className="text-red-400 font-medium text-sm">Cuenta Inactiva</p>
+                                                    <p className="text-red-300 text-xs">Contacta al administrador para reactivar tu cuenta</p>
+                                                </div>
                                             </div>
-                                        </Link>
-                                    </div>
+                                        </div>
+                                    )}
 
                                     {/* Botón de cerrar sesión */}
                                     <div className="pt-4 border-t border-zinc-700">
@@ -184,7 +241,7 @@ const Navbar = () => {
                                 <div className="space-y-4">
                                     <div className="text-center mb-6">
                                         <h3 className="text-white text-lg font-medium mb-2">¡Bienvenido!</h3>
-                                        <p className="text-zinc-400 text-sm">Inicia sesión para acceder a todas las funciones</p>
+                                        <p className="text-zinc-400 text-sm">Inicia sesión para acceder al sistema</p>
                                     </div>
 
                                     <div className="space-y-3">
@@ -194,14 +251,6 @@ const Navbar = () => {
                                             onClick={closeMenu}
                                         >
                                             Iniciar sesión
-                                        </Link>
-
-                                        <Link
-                                            to="/register"
-                                            className="block w-full px-4 py-3 bg-zinc-700 hover:bg-zinc-600 text-white rounded-md text-center font-medium transition-colors duration-200"
-                                            onClick={closeMenu}
-                                        >
-                                            Registrarse
                                         </Link>
                                     </div>
                                 </div>
