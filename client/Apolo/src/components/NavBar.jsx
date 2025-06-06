@@ -8,6 +8,9 @@ const Navbar = () => {
     const navigate = useNavigate()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+    // Verificar si el usuario es administrador
+    const isAdmin = user?.role === 'admin' || user?.isAdmin
+
     const handleLogout = () => {
         Swal.fire({
             title: '¿Cerrar sesión?',
@@ -118,15 +121,15 @@ const Navbar = () => {
                                         <p className="text-white font-medium">Hola, {user?.username}</p>
                                         <p className="text-zinc-400 text-sm">{user?.email}</p>
                                         <div className="flex items-center space-x-2 mt-1">
-                                            <span className={`text-xs px-2 py-1 rounded-full ${user?.role === 'admin' || user?.isAdmin
-                                                ? 'bg-purple-600/20 text-purple-400'
-                                                : 'bg-blue-600/20 text-blue-400'
+                                            <span className={`text-xs px-2 py-1 rounded-full ${isAdmin
+                                                    ? 'bg-purple-600/20 text-purple-400'
+                                                    : 'bg-blue-600/20 text-blue-400'
                                                 }`}>
-                                                {user?.role === 'admin' || user?.isAdmin ? 'Administrador' : 'Usuario'}
+                                                {isAdmin ? 'Administrador' : 'Usuario'}
                                             </span>
                                             <span className={`text-xs px-2 py-1 rounded-full ${user?.isActive
-                                                ? 'bg-emerald-600/20 text-emerald-400'
-                                                : 'bg-red-600/20 text-red-400'
+                                                    ? 'bg-emerald-600/20 text-emerald-400'
+                                                    : 'bg-red-600/20 text-red-400'
                                                 }`}>
                                                 {user?.isActive ? 'Activo' : 'Inactivo'}
                                             </span>
@@ -157,18 +160,24 @@ const Navbar = () => {
                                                     </div>
                                                 </Link>
 
-                                                <Link
-                                                    to="/dashboard"
-                                                    className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                                    onClick={closeMenu}
-                                                >
-                                                    <div className="flex items-center space-x-3">
-                                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
-                                                        </svg>
-                                                        <span>Dashboard</span>
-                                                    </div>
-                                                </Link>
+                                                {/* Dashboard - Solo administradores */}
+                                                {isAdmin && (
+                                                    <Link
+                                                        to="/dashboard"
+                                                        className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                        onClick={closeMenu}
+                                                    >
+                                                        <div className="flex items-center space-x-3">
+                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
+                                                            </svg>
+                                                            <span>Dashboard</span>
+                                                            <span className="ml-auto bg-purple-600/20 text-purple-400 text-xs px-2 py-1 rounded">Admin</span>
+                                                        </div>
+                                                    </Link>
+                                                )}
+
+                                                {/* Punto de Venta - Todos los usuarios */}
                                                 <Link
                                                     to="/pos"
                                                     className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
@@ -183,31 +192,7 @@ const Navbar = () => {
                                                     </div>
                                                 </Link>
 
-                                                <Link
-                                                    to="/sales"
-                                                    className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                                    onClick={closeMenu}
-                                                >
-                                                    <div className="flex items-center space-x-3">
-                                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                                                        </svg>
-                                                        <span>Gestión de Ventas</span>
-                                                    </div>
-                                                </Link>
-                                                <Link
-                                                    to="/suppliers"
-                                                    className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                                    onClick={closeMenu}
-                                                >
-                                                    <div className="flex items-center space-x-3">
-                                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                        </svg>
-                                                        <span>Gestión de Proveedores</span>
-                                                    </div>
-                                                </Link>
-
+                                                {/* Gestión de Clientes - Todos los usuarios */}
                                                 <Link
                                                     to="/customers"
                                                     className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
@@ -221,84 +206,106 @@ const Navbar = () => {
                                                     </div>
                                                 </Link>
 
-                                                <Link
-                                                    to="/products"
-                                                    className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                                    onClick={closeMenu}
-                                                >
-                                                    <div className="flex items-center space-x-3">
-                                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM9 9a1 1 0 112 0v4a1 1 0 11-2 0V9z" clipRule="evenodd" />
-                                                        </svg>
-                                                        <span>Gestión de Productos</span>
-                                                    </div>
-                                                </Link>
+                                                {/* Secciones solo para administradores */}
+                                                {isAdmin && (
+                                                    <>
+                                                        <div className="pt-4 border-t border-zinc-700">
+                                                            <p className="text-zinc-500 text-xs uppercase tracking-wider mb-2 px-4">Administración</p>
 
-                                                {/* Solo mostrar gestión de usuarios a administradores activos */}
-                                                {(user?.role === 'admin' || user?.isAdmin) && (
-                                                    <Link
-                                                        to="/users"
-                                                        className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                                        onClick={closeMenu}
-                                                    >
-                                                        <div className="flex items-center space-x-3">
-                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                            </svg>
-                                                            <span>Gestión de Usuarios</span>
+                                                            <Link
+                                                                to="/sales"
+                                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                                onClick={closeMenu}
+                                                            >
+                                                                <div className="flex items-center space-x-3">
+                                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                    <span>Gestión de Ventas</span>
+                                                                    <span className="ml-auto bg-purple-600/20 text-purple-400 text-xs px-2 py-1 rounded">Admin</span>
+                                                                </div>
+                                                            </Link>
+
+                                                            <Link
+                                                                to="/products"
+                                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                                onClick={closeMenu}
+                                                            >
+                                                                <div className="flex items-center space-x-3">
+                                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM9 9a1 1 0 112 0v4a1 1 0 11-2 0V9z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                    <span>Gestión de Productos</span>
+                                                                    <span className="ml-auto bg-purple-600/20 text-purple-400 text-xs px-2 py-1 rounded">Admin</span>
+                                                                </div>
+                                                            </Link>
+
+                                                            <Link
+                                                                to="/suppliers"
+                                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                                onClick={closeMenu}
+                                                            >
+                                                                <div className="flex items-center space-x-3">
+                                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                    </svg>
+                                                                    <span>Gestión de Proveedores</span>
+                                                                    <span className="ml-auto bg-purple-600/20 text-purple-400 text-xs px-2 py-1 rounded">Admin</span>
+                                                                </div>
+                                                            </Link>
+
+                                                            <Link
+                                                                to="/users"
+                                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                                onClick={closeMenu}
+                                                            >
+                                                                <div className="flex items-center space-x-3">
+                                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                    </svg>
+                                                                    <span>Gestión de Usuarios</span>
+                                                                    <span className="ml-auto bg-purple-600/20 text-purple-400 text-xs px-2 py-1 rounded">Admin</span>
+                                                                </div>
+                                                            </Link>
                                                         </div>
-                                                    </Link>
+
+                                                        {/* Reportes y configuración para admins */}
+                                                        <div className="pt-4 border-t border-zinc-700">
+                                                            <p className="text-zinc-500 text-xs uppercase tracking-wider mb-2 px-4">Reportes y Configuración</p>
+
+                                                            <Link
+                                                                to="/reports/sales"
+                                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                                onClick={closeMenu}
+                                                            >
+                                                                <div className="flex items-center space-x-3">
+                                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                                                                    </svg>
+                                                                    <span>Reporte de Ventas</span>
+                                                                    <span className="ml-auto bg-purple-600/20 text-purple-400 text-xs px-2 py-1 rounded">Admin</span>
+                                                                </div>
+                                                            </Link>
+
+                                                            <Link
+                                                                to="/settings"
+                                                                className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
+                                                                onClick={closeMenu}
+                                                            >
+                                                                <div className="flex items-center space-x-3">
+                                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                    <span>Configuración</span>
+                                                                    <span className="ml-auto bg-purple-600/20 text-purple-400 text-xs px-2 py-1 rounded">Admin</span>
+                                                                </div>
+                                                            </Link>
+                                                        </div>
+                                                    </>
                                                 )}
 
-                                                {/* Aquí puedes agregar más opciones sin preocuparte por el espacio */}
-                                                {/* Ejemplo de opciones adicionales: */}
-
+                                                {/* Ayuda para todos */}
                                                 <div className="pt-4 border-t border-zinc-700">
-                                                    <p className="text-zinc-500 text-xs uppercase tracking-wider mb-2 px-4">Reportes</p>
-
-                                                    <Link
-                                                        to="/reports/sales"
-                                                        className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                                        onClick={closeMenu}
-                                                    >
-                                                        <div className="flex items-center space-x-3">
-                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-                                                            </svg>
-                                                            <span>Reporte de Ventas</span>
-                                                        </div>
-                                                    </Link>
-
-                                                    <Link
-                                                        to="/reports/inventory"
-                                                        className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                                        onClick={closeMenu}
-                                                    >
-                                                        <div className="flex items-center space-x-3">
-                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path fillRule="evenodd" d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" clipRule="evenodd" />
-                                                            </svg>
-                                                            <span>Reporte de Inventario</span>
-                                                        </div>
-                                                    </Link>
-                                                </div>
-
-                                                <div className="pt-4 border-t border-zinc-700">
-                                                    <p className="text-zinc-500 text-xs uppercase tracking-wider mb-2 px-4">Configuración</p>
-
-                                                    <Link
-                                                        to="/settings"
-                                                        className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
-                                                        onClick={closeMenu}
-                                                    >
-                                                        <div className="flex items-center space-x-3">
-                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-                                                            </svg>
-                                                            <span>Configuración</span>
-                                                        </div>
-                                                    </Link>
-
                                                     <Link
                                                         to="/help"
                                                         className="block px-4 py-3 text-zinc-300 hover:text-white hover:bg-zinc-700 rounded-md transition-colors duration-200"
@@ -313,7 +320,7 @@ const Navbar = () => {
                                                     </Link>
                                                 </div>
 
-                                                {/* Espacio adicional para más opciones futuras */}
+                                                {/* Espacio adicional */}
                                                 <div className="h-4"></div>
                                             </div>
                                         ) : (

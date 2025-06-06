@@ -1,24 +1,30 @@
-import { Navigate, useLocation } from 'react-router'
+import { Navigate } from 'react-router'
 import { useAuth } from '../context/AuthContext'
 
-export const ProtectedRoute = ({ children }) => {
-    const { isAuthenticated, loading } = useAuth()
-    const location = useLocation()
+export const ProtectedRoute = ({ children, adminOnly = false }) => {
+    const { isAuthenticated, user } = useAuth()
 
-    // Si está cargando, mostrar un spinner/loader
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
-            </div>
-        )
-    }
-
-    // Si no está autenticado, redirigir al login
     if (!isAuthenticated()) {
-        return <Navigate to="/login" state={{ from: location }} replace />
+        return <Navigate to="/login" replace />
     }
 
-    // Si está autenticado, mostrar el contenido protegido
+    // Si el usuario no está activo, redirigir al login
+    if (!user?.isActive) {
+        return <Navigate to="/login" replace />
+    }
+
+    // Si la ruta requiere permisos de administrador
+    if (adminOnly) {
+        const isAdmin = user?.role === 'admin' || user?.isAdmin
+        if (!isAdmin) {
+            return <Navigate to="/pos" replace />
+        }
+    }
+
     return children
+}
+
+// Componente específico para rutas de solo administradores (mantener compatibilidad)
+export const AdminRoute = ({ children }) => {
+    return <ProtectedRoute adminOnly={true}>{children}</ProtectedRoute>
 }

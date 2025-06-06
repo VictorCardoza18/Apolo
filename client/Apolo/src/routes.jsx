@@ -11,7 +11,6 @@ import SalesPage from './pages/sales/SalesPage'
 import POSPage from './pages/pos/POSPage'
 import SuppliersPage from './pages/suppliers/SuppliersPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
-import { AdminRoute } from './components/AdminRoute'
 
 const routes = [
     {
@@ -27,10 +26,7 @@ const routes = [
                 path: 'login',
                 element: <LoginPage />,
             },
-            {
-                path: 'dashboard',
-                element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
-            },
+            // Rutas para usuarios normales y administradores
             {
                 path: 'pos',
                 element: <ProtectedRoute><POSPage /></ProtectedRoute>,
@@ -39,21 +35,26 @@ const routes = [
                 path: 'customers',
                 element: <ProtectedRoute><CustomersPage /></ProtectedRoute>,
             },
+            // Rutas SOLO para administradores
+            {
+                path: 'dashboard',
+                element: <ProtectedRoute adminOnly={true}><DashboardPage /></ProtectedRoute>,
+            },
             {
                 path: 'products',
-                element: <ProtectedRoute><ProductsPage /></ProtectedRoute>,
+                element: <ProtectedRoute adminOnly={true}><ProductsPage /></ProtectedRoute>,
             },
             {
                 path: 'suppliers',
-                element: <ProtectedRoute><SuppliersPage /></ProtectedRoute>,
+                element: <ProtectedRoute adminOnly={true}><SuppliersPage /></ProtectedRoute>,
             },
             {
                 path: 'sales',
-                element: <ProtectedRoute><SalesPage /></ProtectedRoute>,
+                element: <ProtectedRoute adminOnly={true}><SalesPage /></ProtectedRoute>,
             },
             {
                 path: 'users',
-                element: <AdminRoute><UsersPage /></AdminRoute>,
+                element: <ProtectedRoute adminOnly={true}><UsersPage /></ProtectedRoute>,
             },
             {
                 path: '*',
