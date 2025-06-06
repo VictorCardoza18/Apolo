@@ -7,10 +7,12 @@ import DashboardPage from './pages/dashboard/DashboardPage'
 import CustomersPage from './pages/customers/CustomersPage'
 import ProductsPage from './pages/products/ProductsPage'
 import UsersPage from './pages/users/UsersPage'
+import SalesPage from './pages/sales/SalesPage'
+import POSPage from './pages/pos/POSPage'
+import SuppliersPage from './pages/suppliers/SuppliersPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AdminRoute } from './components/AdminRoute'
 
-// Definición de rutas usando React Router v7
 const routes = [
     {
         path: '/',
@@ -18,7 +20,7 @@ const routes = [
         errorElement: <ErrorPage />,
         children: [
             {
-                index: true, // Ruta raíz
+                index: true,
                 element: <HomePage />,
             },
             {
@@ -30,12 +32,24 @@ const routes = [
                 element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
             },
             {
+                path: 'pos',
+                element: <ProtectedRoute><POSPage /></ProtectedRoute>,
+            },
+            {
                 path: 'customers',
                 element: <ProtectedRoute><CustomersPage /></ProtectedRoute>,
             },
             {
                 path: 'products',
                 element: <ProtectedRoute><ProductsPage /></ProtectedRoute>,
+            },
+            {
+                path: 'suppliers',
+                element: <ProtectedRoute><SuppliersPage /></ProtectedRoute>,
+            },
+            {
+                path: 'sales',
+                element: <ProtectedRoute><SalesPage /></ProtectedRoute>,
             },
             {
                 path: 'users',
