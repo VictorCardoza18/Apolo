@@ -74,7 +74,7 @@ const LoginPage = () => {
     return (
         <>
             {/* Estilos CSS personalizados para SweetAlert2 */}
-            <style jsx global>{`
+            <style global="true">{`
                 .dark-popup {
                     border: 1px solid #3f3f46 !important;
                     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;

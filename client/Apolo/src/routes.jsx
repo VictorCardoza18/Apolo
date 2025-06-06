@@ -10,6 +10,7 @@ import UsersPage from './pages/users/UsersPage'
 import SalesPage from './pages/sales/SalesPage'
 import POSPage from './pages/pos/POSPage'
 import SuppliersPage from './pages/suppliers/SuppliersPage'
+import SalesReportPage from './pages/reports/SalesReportPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 
 const routes = [
@@ -51,6 +52,10 @@ const routes = [
             {
                 path: 'sales',
                 element: <ProtectedRoute adminOnly={true}><SalesPage /></ProtectedRoute>,
+            },
+            {
+                path: 'reports/sales',
+                element: <ProtectedRoute adminOnly={true}><SalesReportPage /></ProtectedRoute>,
             },
             {
                 path: 'users',

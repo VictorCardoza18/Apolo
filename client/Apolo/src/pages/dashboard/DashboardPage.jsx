@@ -3,10 +3,6 @@ import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router'
 import Swal from 'sweetalert2'
 import * as dashboardService from '../../service/dashboardService'
-import * as customerService from '../../service/customerService'
-import * as productService from '../../service/productService'
-import * as saleService from '../../service/saleService'
-import * as supplierService from '../../service/supplierService'
 
 const DashboardPage = () => {
     const { user } = useAuth()
@@ -38,55 +34,22 @@ const DashboardPage = () => {
         try {
             setLoading(true)
 
-            // Realizar múltiples llamadas en paralelo para optimizar la carga
+            // Usar el servicio actualizado que no requiere nuevas APIs
             const [
-                customersData,
-                productsData,
-                salesData,
-                suppliersData,
-                quickStats,
+                dashboardStats,
+                lowStockItems,
+                recentSalesData,
                 aiData
             ] = await Promise.all([
-                customerService.getCustomers().catch(() => []),
-                productService.getProducts().catch(() => []),
-                saleService.getSales().catch(() => []),
-                supplierService.getSuppliers().catch(() => []),
-                saleService.getQuickStats?.() || Promise.resolve(null),
+                dashboardService.getDashboardStats(),
+                dashboardService.getLowStockProducts().catch(() => []),
+                dashboardService.getRecentSales(5).catch(() => []),
                 dashboardService.getAIInsights().catch(() => null)
             ])
 
-            // Calcular estadísticas
-            const today = new Date()
-            today.setHours(0, 0, 0, 0)
-
-            const todaySales = salesData.filter(sale => {
-                const saleDate = new Date(sale.fecha_hora || sale.createdAt)
-                return saleDate >= today && sale.estado_venta === 'completada'
-            })
-
-            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-            const monthlySales = salesData.filter(sale => {
-                const saleDate = new Date(sale.fecha_hora || sale.createdAt)
-                return saleDate >= startOfMonth && sale.estado_venta === 'completada'
-            })
-
-            const lowStock = productsData.filter(product => product.stock_actual <= 10)
-
-            // Usar datos de quickStats si están disponibles, sino calcular localmente
-            const calculatedStats = {
-                totalCustomers: customersData.length,
-                totalProducts: productsData.length,
-                lowStockProducts: lowStock.length,
-                totalSales: salesData.filter(sale => sale.estado_venta === 'completada').length,
-                totalSuppliers: suppliersData.filter(supplier => supplier.estado_proveedor).length,
-                todayRevenue: quickStats?.today?.revenue || todaySales.reduce((sum, sale) => sum + sale.total_general, 0),
-                monthlyRevenue: quickStats?.month?.revenue || monthlySales.reduce((sum, sale) => sum + sale.total_general, 0),
-                activeUsers: customersData.filter(customer => customer.estado_usuario === 'activo').length
-            }
-
-            setStats(calculatedStats)
-            setLowStockItems(lowStock.slice(0, 5)) // Solo mostrar los primeros 5
-            setRecentSales(salesData.slice(0, 5)) // Solo las 5 más recientes
+            setStats(dashboardStats)
+            setLowStockItems(lowStockItems.slice(0, 5))
+            setRecentSales(recentSalesData)
             setAIInsights(aiData)
             setLastUpdate(new Date())
 
