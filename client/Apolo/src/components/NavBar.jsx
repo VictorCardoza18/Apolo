@@ -89,10 +89,10 @@ const Navbar = () => {
                                 {/* Avatar del usuario */}
                                 <div className="relative">
                                     <div className={`p-2 rounded-full ring-2 ${user?.isActive
-                                            ? isAdmin
-                                                ? 'bg-gradient-to-r from-purple-600 to-blue-600 ring-purple-500/30'
-                                                : 'bg-gradient-to-r from-blue-600 to-cyan-600 ring-blue-500/30'
-                                            : 'bg-gradient-to-r from-red-600 to-orange-600 ring-red-500/30'
+                                        ? isAdmin
+                                            ? 'bg-gradient-to-r from-purple-600 to-blue-600 ring-purple-500/30'
+                                            : 'bg-gradient-to-r from-blue-600 to-cyan-600 ring-blue-500/30'
+                                        : 'bg-gradient-to-r from-red-600 to-orange-600 ring-red-500/30'
                                         }`}>
                                         <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
@@ -113,16 +113,16 @@ const Navbar = () => {
                                                 </span>
                                                 {/* Badge de permisos */}
                                                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${isAdmin
-                                                        ? 'bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 border border-purple-500/30'
-                                                        : 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 text-blue-300 border border-blue-500/30'
+                                                    ? 'bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 border border-purple-500/30'
+                                                    : 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 text-blue-300 border border-blue-500/30'
                                                     }`}>
                                                     {isAdmin ? '👑 Administrador' : '👤 Usuario'}
                                                 </span>
                                             </div>
                                             <div className="flex items-center space-x-2 mt-1">
                                                 <span className={`text-xs px-2 py-0.5 rounded-full ${user?.isActive
-                                                        ? 'bg-emerald-600/20 text-emerald-300'
-                                                        : 'bg-red-600/20 text-red-300'
+                                                    ? 'bg-emerald-600/20 text-emerald-300'
+                                                    : 'bg-red-600/20 text-red-300'
                                                     }`}>
                                                     {user?.isActive ? '🟢 Activo' : '🔴 Inactivo'}
                                                 </span>
@@ -191,10 +191,10 @@ const Navbar = () => {
                             {isAuthenticated() && (
                                 <div className="flex items-center space-x-3">
                                     <div className={`p-3 rounded-full ring-2 ${user?.isActive
-                                            ? isAdmin
-                                                ? 'bg-gradient-to-r from-purple-600 to-blue-600 ring-purple-500/30'
-                                                : 'bg-gradient-to-r from-blue-600 to-cyan-600 ring-blue-500/30'
-                                            : 'bg-gradient-to-r from-red-600 to-orange-600 ring-red-500/30'
+                                        ? isAdmin
+                                            ? 'bg-gradient-to-r from-purple-600 to-blue-600 ring-purple-500/30'
+                                            : 'bg-gradient-to-r from-blue-600 to-cyan-600 ring-blue-500/30'
+                                        : 'bg-gradient-to-r from-red-600 to-orange-600 ring-red-500/30'
                                         }`}>
                                         <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
@@ -205,14 +205,14 @@ const Navbar = () => {
                                         <p className="text-zinc-400 text-sm">{user?.email}</p>
                                         <div className="flex items-center space-x-2 mt-1">
                                             <span className={`text-xs px-2 py-1 rounded-full font-medium ${isAdmin
-                                                    ? 'bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 border border-purple-500/30'
-                                                    : 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 text-blue-300 border border-blue-500/30'
+                                                ? 'bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 border border-purple-500/30'
+                                                : 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 text-blue-300 border border-blue-500/30'
                                                 }`}>
                                                 {isAdmin ? '👑 Administrador' : '👤 Usuario'}
                                             </span>
                                             <span className={`text-xs px-2 py-1 rounded-full ${user?.isActive
-                                                    ? 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/30'
-                                                    : 'bg-red-600/20 text-red-300 border border-red-500/30'
+                                                ? 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/30'
+                                                : 'bg-red-600/20 text-red-300 border border-red-500/30'
                                                 }`}>
                                                 {user?.isActive ? '🟢 Activo' : '🔴 Inactivo'}
                                             </span>

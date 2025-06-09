@@ -11,7 +11,9 @@ import SalesPage from './pages/sales/SalesPage'
 import POSPage from './pages/pos/POSPage'
 import SuppliersPage from './pages/suppliers/SuppliersPage'
 import SalesReportPage from './pages/reports/SalesReportPage'
-import { ProtectedRoute } from './components/ProtectedRoute'
+import SettingsPage from './pages/settings/SettingsPage'
+import HelpPage from './pages/help/HelpPage'
+import { ProtectedRoute } from './pages/ProtectedRoute'
 
 const routes = [
     {
@@ -36,6 +38,10 @@ const routes = [
                 path: 'customers',
                 element: <ProtectedRoute><CustomersPage /></ProtectedRoute>,
             },
+            {
+                path: 'help',
+                element: <ProtectedRoute><HelpPage /></ProtectedRoute>,
+            },
             // Rutas SOLO para administradores
             {
                 path: 'dashboard',
@@ -58,6 +64,10 @@ const routes = [
                 element: <ProtectedRoute adminOnly={true}><SalesReportPage /></ProtectedRoute>,
             },
             {
+                path: 'settings',
+                element: <ProtectedRoute adminOnly={true}><SettingsPage /></ProtectedRoute>,
+            },
+            {
                 path: 'users',
                 element: <ProtectedRoute adminOnly={true}><UsersPage /></ProtectedRoute>,
             },
@@ -69,4 +79,4 @@ const routes = [
     },
 ]
 
-export default routes
+export default routes   
