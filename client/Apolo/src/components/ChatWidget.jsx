@@ -8,7 +8,7 @@ const ChatWidget = () => {
         {
             id: 1,
             type: 'bot',
-            content: '¡Hola! Soy tu asistente inteligente de **Apolo POS**. 🚀\n\nPuedo ayudarte con consultas sobre:\n• 📊 **Ventas y facturación**\n• 📦 **Productos e inventario**\n• 👥 **Clientes y estadísticas**\n• 📈 **Reportes y análisis**\n\n¿En qué puedo ayudarte hoy?',
+            content: '¡Hola! Soy tu asistente inteligente de **Apolo POS**. 🚀\n\nPuedo ayudarte con consultas sobre:\n• 📊 **Ventas y facturación**\n• 📦 **Productos e inventario**\n• 👥 **Gestión de clientes**\n• 📈 **Reportes y analytics**\n\n¿En qué puedo ayudarte hoy?',
             timestamp: new Date(),
             suggestions: [
                 '¿Cuánto vendí hoy?',
@@ -135,23 +135,23 @@ const ChatWidget = () => {
     // Botón flotante cuando está cerrado
     if (!isOpen) {
         return (
-            <div className="fixed bottom-6 right-6 z-50">
+            <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="relative group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 hover:shadow-blue-500/25"
+                    className="relative group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-3 sm:p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-3xl"
                 >
                     {/* Efecto de pulso */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full animate-ping opacity-20"></div>
 
                     {/* Ícono principal */}
                     <div className="relative z-10">
-                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                         </svg>
                     </div>
 
                     {/* Badge de notificación */}
-                    <div className="absolute -top-1 -right-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold border-2 border-zinc-900">
+                    <div className="absolute -top-1 -right-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center font-bold border-2 border-white/20">
                         AI
                     </div>
                 </button>
@@ -168,20 +168,27 @@ const ChatWidget = () => {
     }
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 w-96 h-[600px] bg-gradient-to-b from-zinc-800 to-zinc-900 rounded-xl shadow-2xl border border-zinc-700/50 flex flex-col overflow-hidden backdrop-blur-sm">
+        <div className="fixed inset-4 sm:bottom-4 sm:right-4 sm:top-auto sm:left-auto z-50 
+                       sm:w-96 sm:max-w-[calc(100vw-2rem)] 
+                       sm:h-[600px] sm:max-h-[calc(100vh-2rem)]
+                       w-full h-full
+                       bg-gradient-to-b from-zinc-800 to-zinc-900 rounded-none sm:rounded-xl 
+                       shadow-2xl border-0 sm:border border-zinc-700/50 
+                       flex flex-col overflow-hidden backdrop-blur-md">
+
             {/* Header mejorado */}
-            <div className="bg-gradient-to-r from-zinc-800 via-zinc-800 to-zinc-900 border-b border-zinc-700/50 p-4">
+            <div className="bg-gradient-to-r from-zinc-800 via-zinc-800 to-zinc-900 border-b border-zinc-700/50 p-3 sm:p-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                         {/* Avatar del bot con animación */}
                         <div className="relative">
-                            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center ring-2 ring-blue-500/30">
-                                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center ring-2 ring-blue-500/30">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 01-1.414 1.414L2.586 12a2 2 0 010-2.828l2.293-2.293a1 1 0 011.414 0zM17.414 7.707a1 1 0 00-1.414-1.414L13.707 8.586a2 2 0 000 2.828L16 13.707a1 1 0 001.414-1.414L15.121 10l2.293-2.293z" clipRule="evenodd" />
                                 </svg>
                             </div>
                             {/* Indicador de estado activo */}
-                            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-zinc-800 animate-pulse"></div>
+                            <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-500 rounded-full border-2 border-zinc-800 animate-pulse"></div>
                         </div>
 
                         <div>
@@ -206,7 +213,7 @@ const ChatWidget = () => {
                             title="Limpiar conversación"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1H8a1 1 0 00-1 1v3M4 7h16" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                         </button>
 
@@ -224,7 +231,7 @@ const ChatWidget = () => {
             </div>
 
             {/* Área de mensajes con scroll mejorado */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-zinc-800">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-zinc-800">
                 {messages.map((message) => (
                     <div
                         key={message.id}
@@ -232,11 +239,11 @@ const ChatWidget = () => {
                     >
                         <div
                             className={`max-w-[85%] ${message.type === 'user'
-                                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-md'
-                                    : message.isError
-                                        ? 'bg-gradient-to-r from-red-900/40 to-orange-900/40 border border-red-500/30 text-red-200 rounded-2xl rounded-bl-md'
-                                        : 'bg-zinc-800/80 backdrop-blur-sm border border-zinc-700/50 text-zinc-100 rounded-2xl rounded-bl-md'
-                                } px-4 py-3 shadow-lg`}
+                                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-md'
+                                : message.isError
+                                    ? 'bg-gradient-to-r from-red-900/40 to-orange-900/40 border border-red-500/30 text-red-200 rounded-2xl rounded-bl-md'
+                                    : 'bg-zinc-800/80 backdrop-blur-sm border border-zinc-700/50 text-zinc-100 rounded-2xl rounded-bl-md'
+                                } px-3 sm:px-4 py-2 sm:py-3 shadow-lg`}
                         >
                             {/* Contenido del mensaje */}
                             <div
@@ -286,7 +293,7 @@ const ChatWidget = () => {
                 {/* Indicador de escritura */}
                 {isTyping && (
                     <div className="flex justify-start">
-                        <div className="bg-zinc-800/80 backdrop-blur-sm border border-zinc-700/50 px-4 py-3 rounded-2xl rounded-bl-md shadow-lg">
+                        <div className="bg-zinc-800/80 backdrop-blur-sm border border-zinc-700/50 px-3 sm:px-4 py-2 sm:py-3 rounded-2xl rounded-bl-md shadow-lg">
                             <div className="flex items-center space-x-2">
                                 <div className="flex space-x-1">
                                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
@@ -304,17 +311,17 @@ const ChatWidget = () => {
 
             {/* Acciones rápidas */}
             {!isTyping && messages.length === 1 && (
-                <div className="px-4 py-3 border-t border-zinc-700/50 bg-zinc-800/30">
+                <div className="px-3 sm:px-4 py-3 border-t border-zinc-700/50 bg-zinc-800/30">
                     <div className="text-xs text-zinc-400 mb-2 font-medium">🚀 Acciones rápidas:</div>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {quickActions.map((action, index) => (
                             <button
                                 key={index}
                                 onClick={() => handleSuggestionClick(action.action)}
                                 className="flex items-center space-x-2 bg-zinc-700/30 hover:bg-zinc-600/50 p-2 rounded-lg transition-colors text-left border border-zinc-600/30 hover:border-zinc-500/50"
                             >
-                                <span className="text-lg">{action.emoji}</span>
-                                <span className="text-xs text-zinc-300">{action.text}</span>
+                                <span className="text-base sm:text-lg">{action.emoji}</span>
+                                <span className="text-xs text-zinc-300 truncate">{action.text}</span>
                             </button>
                         ))}
                     </div>
@@ -323,7 +330,7 @@ const ChatWidget = () => {
 
             {/* Sugerencias dinámicas */}
             {suggestions.length > 0 && messages.length > 1 && (
-                <div className="px-4 py-2 border-t border-zinc-700/50 bg-zinc-800/30">
+                <div className="px-3 sm:px-4 py-2 border-t border-zinc-700/50 bg-zinc-800/30">
                     <div className="text-xs text-zinc-400 mb-2 flex items-center">
                         <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" clipRule="evenodd" />
@@ -335,7 +342,7 @@ const ChatWidget = () => {
                             <button
                                 key={index}
                                 onClick={() => handleSuggestionClick(suggestion)}
-                                className="text-xs bg-gradient-to-r from-blue-600/20 to-purple-600/20 hover:from-blue-600/30 hover:to-purple-600/30 text-blue-300 px-2 py-1 rounded-md transition-colors border border-blue-500/30 hover:border-blue-400/50"
+                                className="text-xs bg-gradient-to-r from-blue-600/20 to-purple-600/20 hover:from-blue-600/30 hover:to-purple-600/30 text-blue-300 px-2 py-1 rounded-md transition-colors border border-blue-500/30"
                             >
                                 {suggestion}
                             </button>
@@ -345,7 +352,7 @@ const ChatWidget = () => {
             )}
 
             {/* Input mejorado */}
-            <div className="p-4 border-t border-zinc-700/50 bg-zinc-800/50">
+            <div className="p-3 sm:p-4 border-t border-zinc-700/50 bg-zinc-800/50">
                 <div className="flex items-end space-x-2">
                     {/* Panel de emojis */}
                     <div className="relative">
@@ -354,17 +361,17 @@ const ChatWidget = () => {
                             className="text-zinc-400 hover:text-white p-2 rounded-lg hover:bg-zinc-700/50 transition-colors"
                             title="Emojis"
                         >
-                            <span className="text-lg">😊</span>
+                            <span className="text-base sm:text-lg">😊</span>
                         </button>
 
                         {/* Dropdown de emojis */}
                         {showEmojis && (
-                            <div className="absolute bottom-full left-0 mb-2 bg-zinc-800 border border-zinc-700 rounded-lg p-2 shadow-xl grid grid-cols-6 gap-1">
+                            <div className="absolute bottom-full left-0 mb-2 bg-zinc-800 border border-zinc-700 rounded-lg p-2 shadow-xl grid grid-cols-4 sm:grid-cols-6 gap-1 max-w-48">
                                 {emojis.map((emoji, index) => (
                                     <button
                                         key={index}
                                         onClick={() => handleEmojiClick(emoji)}
-                                        className="hover:bg-zinc-700 p-1 rounded transition-colors"
+                                        className="hover:bg-zinc-700 p-1 rounded transition-colors text-center"
                                     >
                                         {emoji}
                                     </button>
@@ -386,9 +393,9 @@ const ChatWidget = () => {
                                 }
                             }}
                             placeholder="Pregúntame sobre ventas, productos, clientes..."
-                            className="w-full bg-zinc-700/50 border border-zinc-600/50 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 resize-none scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-zinc-700 transition-all"
+                            className="w-full bg-zinc-700/50 border border-zinc-600/50 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 resize-none transition-colors"
                             rows="1"
-                            style={{ minHeight: '44px', maxHeight: '120px' }}
+                            style={{ minHeight: '40px', maxHeight: '100px' }}
                             disabled={isTyping}
                         />
 
@@ -402,7 +409,7 @@ const ChatWidget = () => {
                     <button
                         onClick={() => sendMessage()}
                         disabled={isTyping || !inputMessage.trim()}
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-zinc-600 disabled:to-zinc-700 disabled:cursor-not-allowed text-white p-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 disabled:transform-none"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-zinc-600 disabled:to-zinc-700 disabled:cursor-not-allowed text-white p-2 sm:p-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
                     >
                         {isTyping ? (
                             <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -416,8 +423,8 @@ const ChatWidget = () => {
                     </button>
                 </div>
 
-                {/* Tips */}
-                <div className="mt-2 text-xs text-zinc-500 flex items-center">
+                {/* Tips - Solo mostrar en pantallas grandes */}
+                <div className="mt-2 text-xs text-zinc-500 flex items-center hidden sm:flex">
                     <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
