@@ -409,3 +409,4 @@ export const generateBusinessReport = async (req, res) => {
     // TODO: Implementar generación de reporte completo
     res.json({ message: 'Función en desarrollo' });
 };
+

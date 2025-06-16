@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+/* Estilos personalizados para scrollbar del chat */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thumb-zinc-600 {
+  scrollbar-color: #52525b #27272a;
+}
+
+.scrollbar-track-zinc-800 {
+  scrollbar-color: #52525b #27272a;
+}
+
+/* Para navegadores Webkit (Chrome, Safari) */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #27272a;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #52525b;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #71717a;
+}

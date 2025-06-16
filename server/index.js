@@ -10,6 +10,7 @@ import saleRoutes from './routes/saleRoutes.js';
 import supplierRoutes from './routes/supplierRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import configureLogger from './config/loggerConfig.js';
+import chatRoutes from './routes/chatRoutes.js'; // Nueva línea
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/sales', saleRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/chat', chatRoutes); // Nueva línea
 
 // Ruta inicial para verificar que el servidor está funcionando
 app.get('/', (req, res) => {
