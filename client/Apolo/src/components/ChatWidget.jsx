@@ -40,6 +40,388 @@ const ChatWidget = () => {
 
     const emojis = ['😊', '👍', '💰', '📊', '🚀', '✨', '💡', '🎯', '📈', '🔥', '⭐', '💪'];
 
+    // Función para formatear números como moneda
+    const formatCurrency = (amount) => {
+        if (amount == null || isNaN(amount)) return '$0';
+        return new Intl.NumberFormat('es-ES', {
+            style: 'currency',
+            currency: 'USD', // Cambia por tu moneda
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(amount);
+    };
+
+    // Función para formatear fechas de manera amigable
+    const formatDateFriendly = (dateString) => {
+        if (!dateString) return 'Fecha no disponible';
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'Fecha inválida';
+
+        const now = new Date();
+        const diffTime = now - date;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return 'Hoy';
+        if (diffDays === 1) return 'Ayer';
+        if (diffDays < 7) return `Hace ${diffDays} días`;
+
+        return date.toLocaleDateString('es-ES', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
+    // Función para formatear datos de ventas del backend
+    const formatSalesData = (data) => {
+        if (!data) return '';
+
+        let html = '<div class="space-y-3">';
+
+        // Métricas principales
+        if (data.totalSales !== undefined || data.totalRevenue !== undefined) {
+            html += '<div class="bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-lg p-4 border border-green-500/30">';
+            html += '<div class="flex items-center mb-3">';
+            html += '<span class="text-2xl mr-2">💰</span>';
+            html += '<h4 class="text-lg font-semibold text-green-400">Resumen de Ventas</h4>';
+            html += '</div>';
+            html += '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">';
+
+            if (data.totalRevenue !== undefined) {
+                html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                    <div class="text-2xl font-bold text-white">${formatCurrency(data.totalRevenue)}</div>
+                    <div class="text-sm text-green-300">Ingresos Totales</div>
+                </div>`;
+            }
+
+            if (data.totalSales !== undefined) {
+                html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                    <div class="text-2xl font-bold text-white">${data.totalSales}</div>
+                    <div class="text-sm text-green-300">Transacciones</div>
+                </div>`;
+            }
+
+            if (data.avgOrderValue !== undefined) {
+                html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                    <div class="text-2xl font-bold text-white">${formatCurrency(data.avgOrderValue)}</div>
+                    <div class="text-sm text-green-300">Ticket Promedio</div>
+                </div>`;
+            }
+
+            html += '</div></div>';
+        }
+
+        // Productos más vendidos
+        if (data.topProducts && data.topProducts.length > 0) {
+            html += '<div class="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-lg p-4 border border-blue-500/30">';
+            html += '<div class="flex items-center mb-3">';
+            html += '<span class="text-xl mr-2">🏆</span>';
+            html += '<h4 class="font-semibold text-blue-400">Productos Más Vendidos</h4>';
+            html += '</div>';
+
+            data.topProducts.slice(0, 5).forEach((product, index) => {
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+                html += `<div class="flex justify-between items-center py-2 border-b border-blue-500/20 last:border-b-0">
+                    <div class="flex items-center">
+                        <span class="mr-2">${medal}</span>
+                        <span class="text-white font-medium">${product.nombre || product.name || 'Producto'}</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-blue-300 font-semibold">${product.cantidad || product.totalVendido || 0} unidades</div>
+                        ${product.ingresos ? `<div class="text-xs text-blue-400">${formatCurrency(product.ingresos)}</div>` : ''}
+                    </div>
+                </div>`;
+            });
+
+            html += '</div>';
+        }
+
+        // Ventas recientes
+        if (data.sales && data.sales.length > 0) {
+            html += '<div class="bg-zinc-800/50 rounded-lg p-4 border border-zinc-600/30">';
+            html += '<div class="flex items-center mb-3">';
+            html += '<span class="text-xl mr-2">📋</span>';
+            html += '<h4 class="font-semibold text-zinc-300">Ventas Recientes</h4>';
+            html += '</div>';
+
+            data.sales.slice(0, 5).forEach(sale => {
+                const date = new Date(sale.fecha_hora || sale.createdAt);
+                const clienteName = sale.cliente?.nombre_completo || sale.cliente?.nombre || 'Cliente';
+
+                html += `<div class="flex justify-between items-center py-2 border-b border-zinc-600/20 last:border-b-0">
+                    <div>
+                        <div class="text-white font-medium">${clienteName}</div>
+                        <div class="text-xs text-zinc-400">${formatDateFriendly(date)}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-green-400 font-semibold">${formatCurrency(sale.total_general || sale.total)}</div>
+                        <div class="text-xs text-zinc-400">${sale.productos?.length || 0} items</div>
+                    </div>
+                </div>`;
+            });
+
+            html += '</div>';
+        }
+
+        html += '</div>';
+        return html;
+    };
+
+    // Función para formatear datos de productos del backend
+    const formatProductsData = (data) => {
+        if (!data) return '';
+
+        let html = '<div class="space-y-3">';
+
+        // Resumen de productos
+        if (data.summary) {
+            const { total, active, lowStock, outOfStock, stockValue } = data.summary;
+
+            html += '<div class="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-4 border border-purple-500/30">';
+            html += '<div class="flex items-center mb-3">';
+            html += '<span class="text-2xl mr-2">📦</span>';
+            html += '<h4 class="text-lg font-semibold text-purple-400">Resumen de Inventario</h4>';
+            html += '</div>';
+            html += '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">';
+
+            html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                <div class="text-xl font-bold text-white">${total || 0}</div>
+                <div class="text-xs text-purple-300">Total</div>
+            </div>`;
+
+            html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                <div class="text-xl font-bold text-green-400">${active || 0}</div>
+                <div class="text-xs text-purple-300">Con Stock</div>
+            </div>`;
+
+            html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                <div class="text-xl font-bold text-yellow-400">${lowStock || 0}</div>
+                <div class="text-xs text-purple-300">Stock Bajo</div>
+            </div>`;
+
+            html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                <div class="text-xl font-bold text-red-400">${outOfStock || 0}</div>
+                <div class="text-xs text-purple-300">Agotados</div>
+            </div>`;
+
+            html += '</div>';
+
+            if (stockValue) {
+                html += `<div class="mt-3 text-center">
+                    <div class="text-sm text-purple-300">Valor Total del Inventario</div>
+                    <div class="text-2xl font-bold text-white">${formatCurrency(stockValue)}</div>
+                </div>`;
+            }
+
+            html += '</div>';
+        }
+
+        // Lista de productos
+        if (data.products && data.products.length > 0) {
+            html += '<div class="bg-zinc-800/50 rounded-lg p-4 border border-zinc-600/30">';
+            html += '<div class="flex items-center mb-3">';
+            html += '<span class="text-xl mr-2">📋</span>';
+            html += '<h4 class="font-semibold text-zinc-300">Productos</h4>';
+            html += '</div>';
+
+            data.products.slice(0, 10).forEach(product => {
+                const stock = product.stock_actual || product.stock || 0;
+                const minStock = product.stock_minimo || product.minStock || 0;
+                const isLowStock = stock <= minStock;
+                const stockColor = stock === 0 ? 'text-red-400' : isLowStock ? 'text-yellow-400' : 'text-green-400';
+                const stockIcon = stock === 0 ? '❌' : isLowStock ? '⚠️' : '✅';
+
+                html += `<div class="flex justify-between items-center py-3 border-b border-zinc-600/20 last:border-b-0">
+                    <div class="flex-1">
+                        <div class="text-white font-medium">${product.nombre_producto || product.nombre || product.name || 'Producto'}</div>
+                        <div class="text-xs text-zinc-400">${product.categoria || product.category || 'Sin categoría'}</div>
+                        ${product.codigo_producto ? `<div class="text-xs text-zinc-500">Código: ${product.codigo_producto}</div>` : ''}
+                    </div>
+                    <div class="text-right ml-4">
+                        <div class="flex items-center ${stockColor}">
+                            <span class="mr-1">${stockIcon}</span>
+                            <span class="font-semibold">${stock}</span>
+                        </div>
+                        <div class="text-xs text-zinc-400">Min: ${minStock}</div>
+                        ${product.precio_venta ? `<div class="text-xs text-green-400">${formatCurrency(product.precio_venta)}</div>` : ''}
+                    </div>
+                </div>`;
+            });
+
+            html += '</div>';
+        }
+
+        html += '</div>';
+        return html;
+    };
+
+    // Función para formatear datos de clientes del backend
+    const formatCustomersData = (data) => {
+        if (!data) return '';
+
+        let html = '<div class="space-y-3">';
+
+        // Resumen de clientes
+        if (data.total !== undefined || data.active !== undefined) {
+            html += '<div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 rounded-lg p-4 border border-cyan-500/30">';
+            html += '<div class="flex items-center mb-3">';
+            html += '<span class="text-2xl mr-2">👥</span>';
+            html += '<h4 class="text-lg font-semibold text-cyan-400">Resumen de Clientes</h4>';
+            html += '</div>';
+            html += '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">';
+
+            if (data.total !== undefined) {
+                html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                    <div class="text-xl font-bold text-white">${data.total}</div>
+                    <div class="text-xs text-cyan-300">Total</div>
+                </div>`;
+            }
+
+            if (data.active !== undefined) {
+                html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                    <div class="text-xl font-bold text-green-400">${data.active}</div>
+                    <div class="text-xs text-cyan-300">Activos</div>
+                </div>`;
+            }
+
+            if (data.newThisMonth !== undefined) {
+                html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                    <div class="text-xl font-bold text-purple-400">${data.newThisMonth}</div>
+                    <div class="text-xs text-cyan-300">Nuevos</div>
+                </div>`;
+            }
+
+            if (data.avgTicket !== undefined) {
+                html += `<div class="text-center bg-black/20 rounded-lg p-3">
+                    <div class="text-xl font-bold text-yellow-400">${formatCurrency(data.avgTicket)}</div>
+                    <div class="text-xs text-cyan-300">Ticket Promedio</div>
+                </div>`;
+            }
+
+            html += '</div></div>';
+        }
+
+        // Top clientes
+        if (data.topCustomers && data.topCustomers.length > 0) {
+            html += '<div class="bg-zinc-800/50 rounded-lg p-4 border border-zinc-600/30">';
+            html += '<div class="flex items-center mb-3">';
+            html += '<span class="text-xl mr-2">👑</span>';
+            html += '<h4 class="font-semibold text-zinc-300">Mejores Clientes</h4>';
+            html += '</div>';
+
+            data.topCustomers.slice(0, 5).forEach((customer, index) => {
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+
+                html += `<div class="flex justify-between items-center py-3 border-b border-zinc-600/20 last:border-b-0">
+                    <div class="flex items-center">
+                        <span class="mr-2">${medal}</span>
+                        <div>
+                            <div class="text-white font-medium">${customer.nombre || customer.name || 'Cliente'}</div>
+                            <div class="text-xs text-zinc-400">${customer.numeroCompras || customer.totalPurchases || 0} compras</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-green-400 font-semibold">${formatCurrency(customer.totalCompras || customer.totalSpent || 0)}</div>
+                    </div>
+                </div>`;
+            });
+
+            html += '</div>';
+        }
+
+        // Clientes nuevos
+        if (data.newCustomers && data.newCustomers.length > 0) {
+            html += '<div class="bg-zinc-800/50 rounded-lg p-4 border border-zinc-600/30">';
+            html += '<div class="flex items-center mb-3">';
+            html += '<span class="text-xl mr-2">🆕</span>';
+            html += '<h4 class="font-semibold text-zinc-300">Clientes Nuevos</h4>';
+            html += '</div>';
+
+            data.newCustomers.slice(0, 5).forEach(customer => {
+                const regDate = new Date(customer.fecha_registro || customer.createdAt);
+
+                html += `<div class="flex justify-between items-center py-2 border-b border-zinc-600/20 last:border-b-0">
+                    <div>
+                        <div class="text-white font-medium">${customer.nombre_completo || customer.nombre || customer.name || 'Cliente'}</div>
+                        ${customer.email ? `<div class="text-xs text-zinc-400">${customer.email}</div>` : ''}
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-purple-400">${formatDateFriendly(regDate)}</div>
+                    </div>
+                </div>`;
+            });
+
+            html += '</div>';
+        }
+
+        // Clientes inactivos
+        if (data.inactiveCustomers && data.inactiveCustomers.length > 0) {
+            html += '<div class="bg-zinc-800/50 rounded-lg p-4 border border-zinc-600/30">';
+            html += '<div class="flex items-center mb-3">';
+            html += '<span class="text-xl mr-2">😴</span>';
+            html += '<h4 class="font-semibold text-zinc-300">Clientes Inactivos</h4>';
+            html += '</div>';
+
+            data.inactiveCustomers.slice(0, 5).forEach(customer => {
+                html += `<div class="flex justify-between items-center py-2 border-b border-zinc-600/20 last:border-b-0">
+                    <div>
+                        <div class="text-white font-medium">${customer.nombre_completo || customer.nombre || customer.name || 'Cliente'}</div>
+                        ${customer.email ? `<div class="text-xs text-zinc-400">${customer.email}</div>` : ''}
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-orange-400">Inactivo</div>
+                    </div>
+                </div>`;
+            });
+
+            html += '</div>';
+        }
+
+        html += '</div>';
+        return html;
+    };
+
+    // Función principal para formatear datos según el tipo
+    const formatBackendData = (data, queryType, metadata) => {
+        if (!data) return '';
+
+        // Usar el tipo de consulta para formatear apropiadamente
+        switch (queryType || metadata?.type) {
+            case 'SALES':
+                return formatSalesData(data);
+            case 'PRODUCTS':
+                return formatProductsData(data);
+            case 'CUSTOMERS':
+                return formatCustomersData(data);
+            case 'REPORTS':
+            case 'ANALYTICS':
+                // Para reportes, intentar detectar el tipo de datos
+                if (data.totalRevenue !== undefined || data.totalSales !== undefined) {
+                    return formatSalesData(data);
+                } else if (data.products || data.summary) {
+                    return formatProductsData(data);
+                } else if (data.topCustomers || data.total !== undefined) {
+                    return formatCustomersData(data);
+                }
+                break;
+            default:
+                // Intentar detectar automáticamente
+                if (data.totalRevenue !== undefined || data.totalSales !== undefined || data.sales) {
+                    return formatSalesData(data);
+                } else if (data.products || data.summary) {
+                    return formatProductsData(data);
+                } else if (data.topCustomers || data.newCustomers || data.total !== undefined) {
+                    return formatCustomersData(data);
+                }
+        }
+
+        // Fallback para datos no reconocidos
+        return `<div class="bg-zinc-700/30 rounded-lg p-3 border border-zinc-600/30">
+            <div class="text-sm text-zinc-300 mb-2">📊 Datos del sistema:</div>
+            <pre class="text-xs text-zinc-400 whitespace-pre-wrap overflow-x-auto max-h-40 overflow-y-auto">${JSON.stringify(data, null, 2)}</pre>
+        </div>`;
+    };
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -48,7 +430,6 @@ const ChatWidget = () => {
         scrollToBottom();
     }, [messages]);
 
-    // Auto-focus en input cuando se abre el chat
     useEffect(() => {
         if (isOpen && inputRef.current) {
             setTimeout(() => inputRef.current.focus(), 100);
@@ -71,6 +452,7 @@ const ChatWidget = () => {
         setShowEmojis(false);
 
         try {
+            const startTime = Date.now();
             const response = await api.post('/chat/query', {
                 message: messageText,
                 context: {
@@ -79,12 +461,17 @@ const ChatWidget = () => {
                 }
             });
 
+            const processingTime = Date.now() - startTime;
+
             const botMessage = {
                 id: Date.now() + 1,
                 type: 'bot',
                 content: response.data.response,
                 data: response.data.data,
+                charts: response.data.charts,
                 suggestions: response.data.suggestions,
+                metadata: response.data.metadata,
+                processingTime,
                 timestamp: new Date()
             };
 
@@ -96,9 +483,14 @@ const ChatWidget = () => {
             const errorMessage = {
                 id: Date.now() + 1,
                 type: 'bot',
-                content: '❌ Lo siento, hubo un error procesando tu consulta. Por favor intenta de nuevo en unos momentos.',
+                content: `❌ **Error procesando consulta**\n\n${error.response?.data?.message || 'Lo siento, hubo un error procesando tu consulta. Por favor intenta de nuevo en unos momentos.'}\n\n*Si el problema persiste, contacta al soporte técnico.*`,
                 timestamp: new Date(),
-                isError: true
+                isError: true,
+                suggestions: error.response?.data?.suggestions || [
+                    'Intenta reformular tu pregunta',
+                    'Verifica tu conexión',
+                    'Contactar soporte'
+                ]
             };
             setMessages(prev => [...prev, errorMessage]);
         } finally {
@@ -124,7 +516,6 @@ const ChatWidget = () => {
     };
 
     const formatMessage = (content) => {
-        // Procesar markdown básico
         return content
             .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>')
             .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
@@ -140,23 +531,16 @@ const ChatWidget = () => {
                     onClick={() => setIsOpen(true)}
                     className="relative group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-3 sm:p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-3xl"
                 >
-                    {/* Efecto de pulso */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full animate-ping opacity-20"></div>
-
-                    {/* Ícono principal */}
                     <div className="relative z-10">
                         <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                         </svg>
                     </div>
-
-                    {/* Badge de notificación */}
                     <div className="absolute -top-1 -right-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center font-bold border-2 border-white/20">
                         AI
                     </div>
                 </button>
-
-                {/* Tooltip */}
                 <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block">
                     <div className="bg-zinc-800 text-white text-sm px-3 py-2 rounded-lg shadow-lg border border-zinc-700 whitespace-nowrap">
                         Asistente Inteligente Apolo
@@ -180,14 +564,12 @@ const ChatWidget = () => {
             <div className="bg-gradient-to-r from-zinc-800 via-zinc-800 to-zinc-900 border-b border-zinc-700/50 p-3 sm:p-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        {/* Avatar del bot con animación */}
                         <div className="relative">
                             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center ring-2 ring-blue-500/30">
                                 <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 01-1.414 1.414L2.586 12a2 2 0 010-2.828l2.293-2.293a1 1 0 011.414 0zM17.414 7.707a1 1 0 00-1.414-1.414L13.707 8.586a2 2 0 000 2.828L16 13.707a1 1 0 001.414-1.414L15.121 10l2.293-2.293z" clipRule="evenodd" />
                                 </svg>
                             </div>
-                            {/* Indicador de estado activo */}
                             <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-500 rounded-full border-2 border-zinc-800 animate-pulse"></div>
                         </div>
 
@@ -206,7 +588,6 @@ const ChatWidget = () => {
                     </div>
 
                     <div className="flex items-center space-x-2">
-                        {/* Botón de limpiar chat */}
                         <button
                             onClick={() => setMessages([messages[0]])}
                             className="text-zinc-400 hover:text-white p-1.5 rounded-md hover:bg-zinc-700/50 transition-colors"
@@ -217,7 +598,6 @@ const ChatWidget = () => {
                             </svg>
                         </button>
 
-                        {/* Botón de cerrar */}
                         <button
                             onClick={() => setIsOpen(false)}
                             className="text-zinc-400 hover:text-white p-1.5 rounded-md hover:bg-zinc-700/50 transition-colors"
@@ -253,13 +633,35 @@ const ChatWidget = () => {
                                 }}
                             />
 
-                            {/* Datos estructurados si los hay */}
+                            {/* Datos estructurados MEJORADOS */}
                             {message.data && (
-                                <div className="mt-3 bg-black/20 rounded-lg p-3 border border-zinc-600/30">
-                                    <div className="text-xs text-zinc-300 mb-2 font-medium">📊 Datos detallados:</div>
-                                    <pre className="text-xs text-zinc-400 whitespace-pre-wrap overflow-x-auto">
-                                        {JSON.stringify(message.data, null, 2)}
-                                    </pre>
+                                <div className="mt-4">
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: formatBackendData(message.data, message.metadata?.type, message.metadata)
+                                        }}
+                                    />
+                                </div>
+                            )}
+
+                            {/* Información de metadata si está disponible */}
+                            {message.metadata && (
+                                <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                                    {message.metadata.type && (
+                                        <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full border border-blue-500/30">
+                                            {message.metadata.type}
+                                        </span>
+                                    )}
+                                    {message.metadata.confidence && (
+                                        <span className="bg-green-500/20 text-green-300 px-2 py-1 rounded-full border border-green-500/30">
+                                            {Math.round(message.metadata.confidence * 100)}% confianza
+                                        </span>
+                                    )}
+                                    {message.processingTime && (
+                                        <span className="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full border border-purple-500/30">
+                                            {message.processingTime}ms
+                                        </span>
+                                    )}
                                 </div>
                             )}
 
@@ -300,7 +702,7 @@ const ChatWidget = () => {
                                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                                 </div>
-                                <span className="text-xs text-zinc-400">Apolo está pensando...</span>
+                                <span className="text-xs text-zinc-400">Apolo está analizando...</span>
                             </div>
                         </div>
                     </div>
@@ -354,7 +756,6 @@ const ChatWidget = () => {
             {/* Input mejorado */}
             <div className="p-3 sm:p-4 border-t border-zinc-700/50 bg-zinc-800/50">
                 <div className="flex items-end space-x-2">
-                    {/* Panel de emojis */}
                     <div className="relative">
                         <button
                             onClick={() => setShowEmojis(!showEmojis)}
@@ -364,7 +765,6 @@ const ChatWidget = () => {
                             <span className="text-base sm:text-lg">😊</span>
                         </button>
 
-                        {/* Dropdown de emojis */}
                         {showEmojis && (
                             <div className="absolute bottom-full left-0 mb-2 bg-zinc-800 border border-zinc-700 rounded-lg p-2 shadow-xl grid grid-cols-4 sm:grid-cols-6 gap-1 max-w-48">
                                 {emojis.map((emoji, index) => (
@@ -380,7 +780,6 @@ const ChatWidget = () => {
                         )}
                     </div>
 
-                    {/* Input principal */}
                     <div className="flex-1 relative">
                         <textarea
                             ref={inputRef}
@@ -399,13 +798,11 @@ const ChatWidget = () => {
                             disabled={isTyping}
                         />
 
-                        {/* Indicador de caracteres */}
                         <div className="absolute bottom-1 right-2 text-xs text-zinc-500">
                             {inputMessage.length}/500
                         </div>
                     </div>
 
-                    {/* Botón de enviar */}
                     <button
                         onClick={() => sendMessage()}
                         disabled={isTyping || !inputMessage.trim()}
@@ -423,7 +820,6 @@ const ChatWidget = () => {
                     </button>
                 </div>
 
-                {/* Tips - Solo mostrar en pantallas grandes */}
                 <div className="mt-2 text-xs text-zinc-500 flex items-center hidden sm:flex">
                     <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
